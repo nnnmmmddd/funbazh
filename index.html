@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="dark font-vazir">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فان باز | بزرگترین سایت سرگرمی</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-indigo': '#4f46e5',
+                        'primary-pink': '#ec4899',
+                        'primary-purple': '#8b5cf6',
+                        'coin-gold': '#f59e0b', // رنگ جدید برای امتیاز
+                        'rank-gold': '#ffd700',
+                        'rank-silver': '#c0c0c0',
+                        'rank-bronze': '#cd7f32',
+                    },
+                    fontFamily: {
+                        vazir: ['Vazir', 'sans-serif'], 
+                    },
+                    animation: {
+                        shake: 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
+                        float: 'float 3s ease-in-out infinite',
+                        confetti: 'confetti 1.5s ease-out',
+                        pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        shake: { '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' }, '20%, 80%': { transform: 'translate3d(2px, 0, 0)' }, '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' }, '40%, 60%': { transform: 'translate3d(4px, 0, 0)' } },
+                        float: { '0%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-10px)' }, '100%': { transform: 'translateY(0px)' } },
+                        confetti: { '0%': { transform: 'translateY(0) rotate(0deg)', opacity: 1 }, '100%': { transform: 'translateY(-1000px) rotate(720deg)', opacity: 0 } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* CSS عمومی برای Glassmorphism و RTL */
+        @font-face {
+            font-family: 'Vazir';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.3/Vazirmatn-Regular.woff2') format('woff2');
+            font-weight: 400;
+        }
+        .glassmorphism {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        body {
+            background: linear-gradient(135deg, #1f2937, #111827); 
+            transition: background-color 0.5s;
+        }
+        .dark body { background: linear-gradient(135deg, #1f2937, #111827); }
+        .light body { background: linear-gradient(135deg, #e5e7eb, #f9fafb); color: #1f2937; }
+        .light .glassmorphism { background-color: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.1); }
+        main { min-height: calc(100vh - 80px); }
+        .page-transition { transition: opacity 0.3s ease-in-out; }
+        .riddle-choice:hover { transform: scale(1.02); }
+
+        /* کلاس‌های رنگی ثابت برای QuickLinks */
+        .link-riddles { background: linear-gradient(to right, #4c1d95, #a855f7); }
+        .link-tests { background: linear-gradient(to right, #9d174d, #ec4899); }
+        .link-daily { background: linear-gradient(to right, #047857, #34d399); }
+        .link-shop { background: linear-gradient(to right, #b45309, #f59e0b); }
+
+        /* ریسپانسیو بودن دکمه‌های هدر در موبایل */
+        @media (max-width: 767px) {
+            #main-nav {
+                display: none !important;
+            }
+            /* بهینه سازی نمایش امتیاز در موبایل */
+            #score-display {
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.75rem; 
+            }
+            #current-score {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body class="font-vazir text-white">
+
+    <header class="sticky top-0 z-50 glassmorphism p-4 border-b border-white/20">
+        <div class="container mx-auto flex justify-between items-center">
+             <a href="#dashboard" onclick="route('dashboard')" class="text-2xl md:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-primary-purple">
+                FunBaz 🔥
+            </a>
+            
+             <nav id="main-nav" class="space-x-4 space-x-reverse hidden md:flex font-bold text-sm">
+                </nav>
+            
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div id="score-display" class="hidden md:flex items-center glassmorphism p-2 rounded-full px-4 text-sm font-bold">
+                    <span class="text-coin-gold text-xl ml-1">💰</span>
+                    <span id="current-score">0</span>
+                </div>
+                
+                 <button id="theme-toggle" onclick="toggleTheme()" class="p-2 rounded-full transition duration-300 text-xl hover:bg-white/10">
+                    ☀️
+                </button>
+                
+                 <button id="auth-button" onclick="handleAuthAction()" class="bg-primary-pink hover:bg-primary-purple transition px-3 py-1 md:px-4 md:py-2 rounded-lg text-sm font-bold flex items-center">
+                    ورود
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="app-container" class="container mx-auto p-4 page-transition">
+        <div id="initial-loader" class="flex justify-center items-center min-h-[80vh]">
+            <span class="text-xl animate-pulse text-primary-purple">🌀 در حال بارگذاری اولیه...</span>
+        </div>
+    </main>
+    
+    <div id="modal-container" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden justify-center items-center z-[100]">
+        <div id="modal-content" class="glassmorphism p-6 max-w-sm w-full text-center border-l-4 border-primary-pink"></div>
+    </div>
+    
+    <div id="confetti-container" class="fixed inset-0 pointer-events-none z-[99]"></div>
+
+    <script>
+        // --- 1. CONFIG & INITIALIZATION ---
+
+        const appContainer = document.getElementById('app-container');
+        const initialLoader = document.getElementById('initial-loader');
+        let historyStack = []; 
+        
+        // Load State from LocalStorage
+        let state = JSON.parse(localStorage.getItem('funbaz_state')) || {
+            user: null, 
+            isAuthenticated: false,
+            score: 0,
+            level: 1,
+            rank: 'مبتدی', 
+            streak: 0,
+            riddlesSolved: 0,
+            testsCompleted: { mbti: 0, color: 0, memory: 0 }, 
+            testTickets: { mbti: 1, color: 1, memory: 1 }, 
+            gamesWon: 0, // برای بازی کلیک سریع
+            memoryGamesWon: 0, // برای بازی حافظه
+            dailyPlayed: new Date('1/1/2000').toDateString(), 
+            lastPlayedDate: new Date('1/1/2000').toDateString(),
+            theme: 'dark',
+            badges: {}, 
+            solvedRiddles: {}, 
+            riddleChoices: {},
+            userAvatar: '👤',
+            // --- New Features State ---
+            powerups: { doubleScore: 0, freeHint: 0 }, 
+            rankBoosted: null, 
+            // Leaderboard (برای شبیه‌سازی)
+            leaderboard: [
+                { username: 'Mister Fun', score: 1200, rank: 'استاد' },
+                { username: 'TestUser', score: 800, rank: 'پیشرفته' },
+                { username: 'CoolCat', score: 550, rank: 'متوسط' },
+                { username: 'Newbie', score: 100, rank: 'مبتدی' },
+            ],
+            totalTestsCompleted: 0, 
+        };
+        
+        // اصلاح و تکمیل مقادیر اولیه برای اطمینان از اجرای صحیح
+        if (!state.testsCompleted.memory) state.testsCompleted.memory = 0;
+        if (!state.testTickets.memory) state.testTickets.memory = 1;
+        if (!state.memoryGamesWon) state.memoryGamesWon = 0;
+        if (!state.totalTestsCompleted) {
+             state.totalTestsCompleted = Object.values(state.testsCompleted).reduce((sum, count) => sum + count, 0);
+        }
+
+        // --- 2. DATA (محتوای سایت) ---
+
+        const CONTENT = {
+            riddles: [
+                { id: 1, cat: 'آسان', q: 'چی همیشه میاد ولی نمی‌رسه؟', a: 'فردا', p: 5, options: ['امروز', 'ساعت', 'دیروز'] },
+                { id: 2, cat: 'آسان', q: 'چه چیزی داری ولی نمی‌تونی لمسش کنی؟', a: 'نفست', p: 5, options: ['درخت', 'سنگ', 'آب'] },
+                { id: 3, cat: 'آسان', q: 'هر روز می‌میرم هر شب زنده می‌شم', a: 'شمع', p: 5, options: ['ماه', 'خورشید', 'ستاره'] },
+                { id: 4, cat: 'متوسط', q: '3کلمه:3+4+5حرف=بزرگترینم', a: 'خدا', p: 10, options: ['بزرگ', 'عشق', 'زندگی'] },
+                { id: 5, cat: 'متوسط', q: 'پدرم پسرعمویمه', a: 'خودم', p: 10, options: ['دایی', 'عمو', 'برادر'] },
+                { id: 6, cat: 'سخت', q: 'منو بخوری می‌میری', a: 'سم', p: 20, options: ['نان', 'آب', 'هوا'] },
+                { id: 7, cat: 'سخت', q: 'هر چی بیشتر بگیری کمتر می‌شم', a: 'نفس', p: 20, options: ['خواب', 'پول', 'غذا'] },
+            ],
+            dailyRiddle: {
+                q: 'آن چیست که بدون کلید باز می‌شود اما بدون دستگیره بسته؟',
+                a: 'تخم مرغ',
+                hint: 'معمولاً قبل از خوردن آن را می‌شکنند.',
+                points: 50,
+            },
+            tests: [
+                 { key: 'mbti', title: 'تست کامل MBTI', description: '۷ سوال کلیدی برای تعیین تیپ شخصیتی کامل (شامل J/P).', points: 40, questions: [
+                    { q: '۱. در مهمانی‌ها، بیشتر:', options: [{ text: 'با افراد زیاد صحبت می‌کنید', value: 'E' }, { text: 'با چند نفر عمیق صحبت می‌کنید', value: 'I' }] },
+                    { q: '۲. وقتی چیزی را یاد می‌گیرید، بیشتر به:', options: [{ text: 'جزئیات عملی', value: 'S' }, { text: 'ایده‌ها و تئوری‌ها', value: 'N' }] },
+                    { q: '۳. تصمیمات خود را بر اساس:', options: [{ text: 'منطق و تحلیل', value: 'T' }, { text: 'احساسات و تأثیر بر دیگران', value: 'F' }] },
+                    { q: '۴. زندگی روزمره شما بیشتر:', options: [{ text: 'برنامه‌ریزی شده و منظم است', value: 'J' }, { text: 'قابل انعطاف و خودبه‌خودی است', value: 'P' }] },
+                    { q: '۵. ترجیح می‌دهید:', options: [{ text: 'به گذشته و تجربیات بپردازید', value: 'S' }, { text: 'به آینده و احتمالات بپردازید', value: 'N' }] },
+                    { q: '۶. در بحث‌ها، هدف شما:', options: [{ text: 'رسیدن به حقیقت بدون توجه به احساسات', value: 'T' }, { text: 'حفظ صلح و هماهنگی گروه', value: 'F' }] },
+                    { q: '۷. اغلب مردم شما را فردی:', options: [{ text: 'جدی و قاطع می‌بینند', value: 'J' }, { text: 'آرام و منعطف می‌بینند', value: 'P' }] },
+                ]},
+                 { key: 'color', title: 'تست رنگ زندگی', description: 'بر اساس انتخاب‌های رنگی شما، شخصیت و حالت روحی غالب شما را مشخص می‌کند.', points: 25, questions: [
+                    { q: '۱. وقتی تنها هستید، بیشتر:', options: [{ text: 'به ایده‌های جدید فکر می‌کنید', value: 'Yellow' }, { text: 'آرامش پیدا می‌کنید', value: 'Blue' }] },
+                    { q: '۲. در گروه، وظیفه شما:', options: [{ text: 'سازماندهی و مدیریت است', value: 'Green' }, { text: 'تشویق دیگران است', value: 'Orange' }] },
+                    { q: '۳. رنگ مورد علاقه شما برای اتاق خواب:', options: [{ text: 'قرمز یا نارنجی (انرژی)', value: 'Red' }, { text: 'آبی یا بنفش (آرامش)', value: 'Blue' }] },
+                    { q: '۴. در لباس پوشیدن، بیشتر:', options: [{ text: 'رنگ‌های تیره و رسمی', value: 'Black' }, { text: 'رنگ‌های روشن و شاد', value: 'White' }] },
+                ]},
+                 { key: 'memory', title: 'تست حافظه بصری (Pattern)', points: 35, description: 'آزمون توانایی شما در به یادآوری الگوهای بصری در مدت زمان کوتاه.', questions: [] },
+            ],
+            games: [
+                 { key: 'clicks', title: 'بازی سرعت کلیک', description: 'در ۱۰ ثانیه بیشترین تعداد کلیک را ثبت کنید.', points: 20, path: 'games/clicks', icon: '⚡' },
+                 { key: 'memory', title: 'بازی حافظه کارتی', description: 'جفت کارت‌های یکسان را پیدا کنید.', points: 25, path: 'games/memory', icon: '🧠' },
+            ],
+            avatars: ['👤', '🤖', '👑', '🚀', '⭐', '🦄', '🔥', '💖'],
+            badges: [
+                { id: 'b1', title: 'مبتدی معما', cond: 'حل ۱۰ معما', field: 'riddlesSolved', goal: 10, type: 'برنز', icon: '🧠' },
+                { id: 'b2', title: 'استریک ۷ روزه', cond: '۷ روز بازی متوالی', field: 'streak', goal: 7, type: 'طلا', icon: '🔥' },
+                { id: 'b3', title: 'تست باز', cond: 'تکمیل ۵ تست', field: 'totalTestsCompleted', goal: 5, type: 'نقره', icon: '💖' }, 
+                { id: 'b4', title: 'کلیکر سریع', cond: '۵ بازی کلیک سریع برده', field: 'gamesWon', goal: 5, type: 'برنز', icon: '⚡' },
+                { id: 'b5', title: 'قهرمان حافظه', cond: '۵ بازی حافظه برده', field: 'memoryGamesWon', goal: 5, type: 'طلا', icon: '🧠' },
+            ],
+            ranks: [
+                 { name: 'مبتدی', scoreMin: 0, color: 'text-gray-400' },
+                 { name: 'عادی', scoreMin: 200, color: 'text-green-400' },
+                 { name: 'پیشرفته', scoreMin: 500, color: 'text-blue-400' },
+                 { name: 'استاد', scoreMin: 1000, color: 'text-rank-gold' },
+                 { name: 'لایت‌باز (FUNBAZ)', scoreMin: 2000, color: 'text-primary-pink' },
+            ],
+            shopItems: [
+                { id: 'item_reset_mbti', title: 'بلیط ریست تست MBTI', desc: 'امکان انجام مجدد تست شخصیت MBTI.', cost: 150, type: 'ticket', target: 'mbti', icon: '🎟️' },
+                { id: 'item_reset_color', title: 'بلیط ریست تست رنگ', desc: 'امکان انجام مجدد تست رنگ زندگی.', cost: 100, type: 'ticket', target: 'color', icon: '🎟️' },
+                { id: 'powerup_double', title: 'Power-up دوبرابری امتیاز', desc: 'امتیاز فعالیت بعدی شما را دو برابر می‌کند.', cost: 300, type: 'powerup', target: 'doubleScore', icon: '✨' },
+                { id: 'powerup_hint', title: 'Power-up راهنمای رایگان', desc: 'یک راهنمای رایگان برای معمای روزانه می‌دهد.', cost: 150, type: 'powerup', target: 'freeHint', icon: '💡' },
+                { id: 'rank_boost', title: 'ارتقاء مقام موقت (۷ روز)', desc: 'مقام شما را یک پله ارتقاء می‌دهد.', cost: 1000, type: 'rank', target: 'boost', icon: '👑' },
+                { id: 'item_avatar_king', title: 'آواتار پادشاه', desc: 'باز کردن آواتار پادشاه برای پروفایل.', cost: 500, type: 'avatar', target: '👑', icon: '👑' },
+            ],
+        };
+        
+        // --- 3. UTILITIES & UI HELPERS ---
+
+        function saveState() {
+            // به‌روزرسانی نمایش امتیاز در هدر قبل از ذخیره
+            updateScoreDisplay(); 
+            localStorage.setItem('funbaz_state', JSON.stringify(state));
+        }
+        
+        function updateScoreDisplay() {
+             const scoreEl = document.getElementById('current-score');
+             if (scoreEl) {
+                 scoreEl.textContent = state.score.toLocaleString();
+             }
+        }
+
+        function showModal(message, type = 'info') {
+            const modalContainer = document.getElementById('modal-container');
+            const modalContent = document.getElementById('modal-content');
+            
+            let color = type === 'error' ? 'text-red-400' : type === 'success' ? 'text-green-400' : 'text-primary-pink';
+            
+            modalContent.innerHTML = `<p class="text-xl font-bold ${color}">${message}</p>
+                                     <button onclick="document.getElementById('modal-container').style.display='none'" class="mt-4 px-4 py-2 bg-white/30 rounded-lg hover:bg-white/40 transition">بستن</button>`;
+            modalContainer.style.display = 'flex';
+        }
+
+        /**
+         * مدیریت مسیریابی صفحات
+         * @param {string} page - مسیر صفحه (مثلاً 'dashboard', 'tests/mbti-start')
+         * @param {boolean} pushToHistory - آیا به پشته تاریخچه اضافه شود یا خیر (برای back)
+         */
+        function route(page, pushToHistory = true) {
+            const currentPage = window.location.hash.substring(1);
+            
+            // جلوگیری از افزودن 'login' و '404' به تاریخچه
+            if (pushToHistory && currentPage && currentPage !== page && page !== 'login' && page !== '404') {
+                historyStack.push(currentPage);
+            }
+
+            window.location.hash = `#${page}`;
+            renderPage(page);
+        }
+        
+        /**
+         * بازگشت به صفحه قبلی با استفاده از پشته تاریخچه
+         */
+        function goBack() {
+            if (historyStack.length > 0) {
+                const previousPage = historyStack.pop();
+                // با false برای pushToHistory فراخوانی می‌کنیم تا دوباره به پشته اضافه نشود
+                route(previousPage, false); 
+            } else {
+                route('dashboard', false); // اگر پشته خالی بود، به داشبورد برگرد
+            }
+        }
+
+        function updateNav() {
+            const nav = document.getElementById('main-nav');
+            const authButton = document.getElementById('auth-button');
+            const scoreDisplay = document.getElementById('score-display');
+            
+            if (state.isAuthenticated) {
+                nav.innerHTML = `
+                    <a href="#dashboard" onclick="route('dashboard')" class="text-white hover:text-primary-pink transition">داشبورد</a>
+                    <a href="#riddles" onclick="route('riddles')" class="text-white hover:text-primary-pink transition">معماها</a>
+                    <a href="#tests" onclick="route('tests')" class="text-white hover:text-primary-pink transition">تست‌ها</a>
+                    <a href="#games" onclick="route('games')" class="text-white hover:text-primary-pink transition">بازی‌ها</a>
+                    <a href="#daily" onclick="route('daily')" class="text-white hover:text-primary-pink transition">چالش روزانه</a>
+                    <a href="#shop" onclick="route('shop')" class="text-white hover:text-coin-gold transition">🛒 فروشگاه</a>
+                    <a href="#leaderboard" onclick="route('leaderboard')" class="text-white hover:text-rank-gold transition">🏆 لیدربرد</a>
+                `;
+                 
+                authButton.innerHTML = `<span class="text-xl ml-2">${state.userAvatar}</span> <span class="hidden md:inline">${state.user?.username || 'پروفایل'}</span>`;
+                authButton.onclick = () => route('profile');
+                authButton.classList.remove('bg-primary-pink', 'hover:bg-primary-purple');
+                authButton.classList.add('bg-primary-purple/80', 'hover:bg-primary-purple');
+                scoreDisplay.classList.remove('hidden');
+            } else {
+                nav.innerHTML = '';
+                authButton.textContent = 'ورود / ثبت نام';
+                authButton.onclick = () => route('login');
+                authButton.classList.remove('bg-primary-purple/80', 'hover:bg-primary-purple');
+                authButton.classList.add('bg-primary-pink', 'hover:bg-primary-purple');
+                scoreDisplay.classList.add('hidden');
+            }
+        }
+        
+        function handleAuthAction() {
+            if (state.isAuthenticated) {
+                route('profile');
+            } else {
+                route('login');
+            }
+        }
+        
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            document.documentElement.classList.toggle('light', !isDark);
+            state.theme = isDark ? 'dark' : 'light';
+            localStorage.setItem('theme', state.theme);
+            document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
+        }
+        
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // --- 4. CORE LOGIC (LEVEL, SCORE, STREAK, BADGES) ---
+        
+        function addScore(points, fieldToIncrement = null, usePowerup = true) {
+            let finalPoints = points;
+            
+            // اعمال Power-up دوبرابری امتیاز
+            let powerupUsed = false;
+            if (usePowerup && state.powerups.doubleScore > 0) {
+                 finalPoints *= 2;
+                 state.powerups.doubleScore -= 1;
+                 powerupUsed = true;
+            }
+            
+            state.score += finalPoints;
+            
+            const oldLevel = state.level;
+            // فرمول جدید لول‌آپ (سخت‌تر)
+            const newLevel = Math.floor(1 + Math.log10(state.score + 10) * 5); 
+            state.level = newLevel;
+            
+            if (newLevel > oldLevel) {
+                showConfetti();
+                showModal(`🎉 تبریک! شما به لول ${newLevel} رسیدید!`, 'success');
+            }
+            
+            // به‌روزرسانی مقام بر اساس امتیاز
+            updateRank();
+
+            // افزایش آمار
+            if (fieldToIncrement) {
+                if (fieldToIncrement.startsWith('testsCompleted.')) {
+                    const testKey = fieldToIncrement.split('.')[1];
+                    state.testsCompleted[testKey] = (state.testsCompleted[testKey] || 0) + 1;
+                    state.totalTestsCompleted = Object.values(state.testsCompleted).reduce((sum, count) => sum + count, 0);
+                } else if (state.hasOwnProperty(fieldToIncrement)) {
+                    state[fieldToIncrement] += 1;
+                } else if (fieldToIncrement === 'memoryGamesWon') {
+                     state.memoryGamesWon = (state.memoryGamesWon || 0) + 1;
+                } else if (fieldToIncrement === 'gamesWon') {
+                     state.gamesWon = (state.gamesWon || 0) + 1;
+                }
+            }
+            
+            // نمایش پیام Power-up
+            if (powerupUsed) {
+                 showModal(`🌟 Power-up دوبرابری اعمال شد! امتیاز کسب شده: ${finalPoints}.`, 'success');
+            }
+
+            // به‌روزرسانی وضعیت کاربر در لیدربرد (شبیه‌سازی)
+            updateLeaderboard(state.user?.username, state.score, state.rank);
+            checkBadgeProgress();
+            saveState();
+        }
+
+        function subtractScore(points) {
+             if (state.score < points) {
+                 return false;
+             }
+             state.score -= points;
+             updateRank();
+             updateLeaderboard(state.user?.username, state.score, state.rank);
+             saveState();
+             return true;
+        }
+
+        function updateRank() {
+            const currentScore = state.score;
+            let currentRank = state.rank;
+            let bestRank = CONTENT.ranks[0];
+
+            // بررسی پایان یافتن بوست مقام
+            if (state.rankBoosted) {
+                 const boostDate = new Date(state.rankBoosted);
+                 const now = new Date();
+                 const diffTime = Math.abs(now - boostDate);
+                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                 
+                 if (diffDays > 7) {
+                     state.rankBoosted = null;
+                     showModal('⏰ مقام ارتقاء یافته موقت شما به پایان رسید.', 'info');
+                 }
+            }
+            
+            // تعیین رنک بر اساس امتیاز
+            for (let i = CONTENT.ranks.length - 1; i >= 0; i--) {
+                if (currentScore >= CONTENT.ranks[i].scoreMin) {
+                    bestRank = CONTENT.ranks[i];
+                    break;
+                }
+            }
+
+            currentRank = bestRank.name;
+
+            // اعمال بوست اگر فعال است
+            if (state.rankBoosted) {
+                 const rankIndex = CONTENT.ranks.findIndex(r => r.name === currentRank);
+                 const boostedIndex = Math.min(rankIndex + 1, CONTENT.ranks.length - 1);
+                 if (boostedIndex > rankIndex) {
+                    currentRank = CONTENT.ranks[boostedIndex].name;
+                 }
+            }
+            
+            state.rank = currentRank;
+        }
+        
+        function updateLeaderboard(username, score, rank) {
+            if (!username) return;
+
+            // حذف کاربر از لیدربرد اگر وجود دارد
+            state.leaderboard = state.leaderboard.filter(u => u.username !== username);
+            
+            // اضافه کردن کاربر فعلی
+            state.leaderboard.push({ username, score, rank });
+            
+            // مرتب‌سازی لیدربرد (بیشترین امتیاز)
+            state.leaderboard.sort((a, b) => b.score - a.score);
+            
+            // محدود کردن لیدربرد به مثلا ۱۰ نفر
+            state.leaderboard = state.leaderboard.slice(0, 10);
+        }
+
+        function checkBadgeProgress() {
+            CONTENT.badges.forEach(badge => {
+                let current = 0;
+                
+                if (badge.field.includes('.')) {
+                    const [parent, child] = badge.field.split('.');
+                    if (parent === 'testsCompleted') {
+                        current = state.totalTestsCompleted;
+                    } else {
+                        current = state[parent][child] || 0;
+                    }
+                } else if (badge.field === 'totalTestsCompleted') {
+                     current = state.totalTestsCompleted;
+                } else if (badge.field === 'memoryGamesWon') {
+                    current = state.memoryGamesWon || 0;
+                } else {
+                    current = state[badge.field] || 0;
+                }
+                
+                if (current >= badge.goal && !state.badges[badge.id]) {
+                    state.badges[badge.id] = true;
+                    showConfetti();
+                    showModal(`🏅 بج ${badge.title} (${badge.type}) را باز کردید!`, 'success');
+                }
+            });
+        }
+        
+        function showConfetti() {
+             // Confetti logic
+            const container = document.getElementById('confetti-container');
+            for (let i = 0; i < 50; i++) {
+                const c = document.createElement('div');
+                c.className = 'absolute w-2 h-2 rounded-full animate-confetti';
+                c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                c.style.left = `${Math.random() * 100}vw`;
+                c.style.animationDelay = `${Math.random() * 0.5}s`;
+                c.style.animationDuration = `${1.5 + Math.random()}s`;
+                container.appendChild(c);
+                setTimeout(() => c.remove(), 2000);
+            }
+        }
+
+        // --- 5. PAGE RENDERING (Router) ---
+
+        function renderPage(page) {
+            // حل مشکل صفحه خالی: ابتدا صفحه را مخفی کنید، سپس محتوا را رندر کنید و در نهایت نمایش دهید.
+            appContainer.style.opacity = '0'; 
+            window.scrollTo(0, 0); 
+            
+            if (page === 'login' && state.isAuthenticated) { return route('dashboard', false); }
+            if (page !== 'login' && !state.isAuthenticated) { return route('login', false); }
+            
+            let html = '';
+            let title = 'فان باز';
+
+            const parts = page.split('/');
+            const basePage = parts[0];
+            const param = parts[1];
+            
+            switch (basePage) {
+                case 'dashboard': html = renderDashboard(); title = 'داشبورد'; break;
+                case 'login': html = renderLogin(); title = 'ورود/ثبت نام'; break;
+                case 'riddles': html = renderRiddles(); title = 'معماها'; break;
+                case 'tests': 
+                    if (param && param.endsWith('-start')) {
+                         const testKey = param.replace('-start', '');
+                         const test = CONTENT.tests.find(c => c.key === testKey);
+                         html = renderTestStart(test); title = `شروع ${test?.title || 'تست'}`;
+                    } else if (param && param.endsWith('-quiz')) { 
+                         const testKey = param.replace('-quiz', '');
+                         const test = CONTENT.tests.find(c => c.key === testKey);
+                         html = renderTestQuiz(test); title = test?.title || 'تست'; 
+                    } else { html = renderPersonalityTests(); title = 'تست‌ها'; } // صفحه لیست تست‌ها
+                    break;
+                case 'daily': html = renderDailyChallenge(); title = 'چالش روزانه'; break;
+                case 'games': 
+                    if (param && param === 'clicks') { html = renderClickSpeedGame(); title = 'کلیک سریع'; }
+                    else if (param && param === 'memory') { html = renderMemoryGame(); title = 'بازی حافظه'; }
+                    else { html = renderGamesList(); title = 'بازی‌ها'; } // صفحه لیست بازی‌ها
+                    break;
+                case 'shop': html = renderShop(); title = 'فروشگاه'; break;
+                case 'profile': html = renderProfile(); title = 'پروفایل'; break;
+                case 'edit-profile': html = renderEditProfile(); title = 'ویرایش پروفایل'; break;
+                case 'leaderboard': html = renderLeaderboard(); title = 'جدول رتبه‌بندی'; break;
+                case 'awards': html = renderAwards(); title = 'جوایز و مدال‌ها'; break;
+                default: html = render404(); title = '404'; break;
+            }
+            
+            document.title = `${title} | فان باز`;
+            appContainer.innerHTML = html;
+            
+            // اجرای توابع مربوط به هر صفحه
+            if (window[`init${basePage}Page`]) {
+                window[`init${basePage}Page`](param);
+            }
+            updateNav(); 
+            updateScoreDisplay(); 
+            
+            // نمایش صفحه با افکت
+            setTimeout(() => { appContainer.style.opacity = '1'; }, 50);
+        }
+        
+        function render404() {
+             return `<div class="text-center py-20 glassmorphism max-w-lg mx-auto p-10">
+                        <span class="text-6xl mb-4">❓</span>
+                        <h1 class="text-4xl font-bold text-red-400 mt-4">صفحه مورد نظر یافت نشد (404)</h1>
+                        <p class="text-gray-300 mt-2">به نظر می‌رسد این آدرس وجود ندارد یا باگ شده است!</p>
+                        <button onclick="route('dashboard')" class="mt-8 px-6 py-3 bg-primary-pink rounded-lg hover:bg-primary-purple transition">
+                            بازگشت به داشبورد
+                        </button>
+                    </div>`;
+        }
+
+
+        // --- 6. PAGE TEMPLATES (HTML GENERATION) ---
+
+        function renderHeader(title, backButton = false) {
+            const backHtml = backButton ? 
+                `<button onclick="goBack()" class="p-2 ml-4 rounded-full bg-white/10 hover:bg-white/20 transition text-xl flex items-center justify-center w-10 h-10">
+                    <svg class="rtl:rotate-180 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>` : '';
+
+            return `
+                <div class="flex items-center mb-8 pb-4 border-b border-white/20">
+                    ${backHtml}
+                    <h1 class="text-3xl md:text-4xl font-bold text-yellow-300">
+                        ${title}
+                    </h1>
+                </div>
+            `;
+        }
+        
+        // ************* LOGIN PAGE *************
+        function renderLogin() {
+             return `
+                <div class="flex min-h-[90vh] items-center justify-center p-4"
+                     style="background: linear-gradient(to bottom right, #4c1d95, #a855f7, #ec4899);">
+                    
+                    <div id="auth-box" class="glassmorphism max-w-lg w-full p-10 text-white shadow-2xl transition-all duration-700 animate-float">
+                        <h1 class="text-4xl font-bold text-center mb-8 bg-clip-text text-transparent"
+                            style="background-image: linear-gradient(to right, #f97316, #fde047);">
+                            ✨ خوش آمدید به فان باز ✨
+                        </h1>
+                        <form id="auth-form" class="space-y-6">
+                            <input id="username" type="text" placeholder="نام مستعار" required class="w-full p-3 rounded-lg bg-white/10 border border-white/30 placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-pink-500 hidden" />
+                            <input id="email" type="email" placeholder="ایمیل" required class="w-full p-3 rounded-lg bg-white/10 border border-white/30 placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-pink-500" />
+                            <input id="password" type="password" placeholder="رمز عبور" required class="w-full p-3 rounded-lg bg-white/10 border border-white/30 placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-pink-500" />
+                            
+                            <button type="submit" id="auth-submit-btn" class="w-full p-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-[1.02]
+                              bg-gradient-to-r from-pink-500 to-primary-purple hover:from-pink-600 hover:to-primary-purple/90 shadow-xl">
+                              ورود
+                            </button>
+                        </form>
+                        
+                        <div class="text-center mt-4 text-sm">
+                            <button id="toggle-mode" onclick="toggleAuthMode(true)" class="text-pink-300 hover:text-pink-500 transition-colors">
+                              حساب ندارید؟ ثبت نام کنید
+                            </button>
+                        </div>
+
+                        <div id="auth-error" class="text-red-400 text-center mt-4 font-bold"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ************* DASHBOARD PAGE *************
+        function renderDashboard() {
+            const username = state.user?.username || 'دوست عزیز';
+            const badgesCount = Object.values(state.badges).filter(v => v).length;
+            const streakText = state.streak === 0 ? 'شروع کن!' : state.streak;
+
+            return `
+                <div class="py-5 md:py-10">
+                    <div class="glassmorphism p-6 md:p-8 mb-8 md:mb-10 border-l-4 border-primary-pink">
+                        <h2 class="text-xl md:text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500">
+                            سلام، ${username}! خوش برگشتی 👋
+                        </h2>
+                        
+                         <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div class="p-3 bg-white/10 rounded-lg">
+                                <p class="text-xs md:text-sm text-gray-300">امتیاز کل</p>
+                                <p class="text-2xl md:text-3xl font-extrabold text-pink-400">${state.score.toLocaleString()}</p>
+                            </div>
+                            <div class="p-3 bg-white/10 rounded-lg">
+                                <p class="text-xs md:text-sm text-gray-300">مقام شما</p>
+                                <p class="text-2xl md:text-3xl font-extrabold ${CONTENT.ranks.find(r => r.name === state.rank)?.color || 'text-rank-gold'}">${state.rank}</p>
+                            </div>
+                            <div class="p-3 bg-white/10 rounded-lg">
+                                <p class="text-xs md:text-sm text-gray-300">استریک روزانه</p>
+                                <p class="text-2xl md:text-3xl font-extrabold text-green-400">🔥 ${streakText}</p>
+                            </div>
+                            <div class="p-3 bg-white/10 rounded-lg cursor-pointer hover:bg-white/20 transition" onclick="route('awards')">
+                                <p class="text-xs md:text-sm text-gray-300">جوایز کسب شده</p>
+                                <p class="text-2xl md:text-3xl font-extrabold text-blue-400">🏅 ${Object.values(state.badges).filter(v => v).length}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-10">
+                        <h3 class="text-2xl font-bold mb-4 border-b border-primary-purple pb-2">فعالیت‌های سریع</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <a href="#riddles" onclick="route('riddles')" class="link-riddles p-5 rounded-xl transition transform hover:scale-[1.03] shadow-lg text-center font-bold">
+                                <span class="text-3xl block mb-2">💡</span> معماهای فکری
+                            </a>
+                            <a href="#tests" onclick="route('tests')" class="link-tests p-5 rounded-xl transition transform hover:scale-[1.03] shadow-lg text-center font-bold">
+                                <span class="text-3xl block mb-2">💖</span> تست‌های شخصیت
+                            </a>
+                            <a href="#daily" onclick="route('daily')" class="link-daily p-5 rounded-xl transition transform hover:scale-[1.03] shadow-lg text-center font-bold">
+                                <span class="text-3xl block mb-2">📅</span> چالش روزانه
+                            </a>
+                            <a href="#games" onclick="route('games')" class="bg-gradient-to-r from-cyan-600 to-blue-500 p-5 rounded-xl transition transform hover:scale-[1.03] shadow-lg text-center font-bold">
+                                <span class="text-3xl block mb-2">🎮</span> بازی‌های سرعتی
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-10">
+                        <h3 class="text-2xl font-bold mb-4 border-b border-rank-gold pb-2 flex justify-between items-center">
+                            <span>🏆 برترین‌های روز</span>
+                            <button onclick="route('leaderboard')" class="text-sm text-gray-300 hover:text-rank-gold transition">مشاهده کامل</button>
+                        </h3>
+                        ${renderLeaderboardSnippet()}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderLeaderboardSnippet() {
+             const top3 = state.leaderboard.slice(0, 3);
+             let html = top3.map((user, index) => {
+                 let color = '';
+                 let icon = '';
+                 if (index === 0) { color = 'bg-rank-gold/20 border-rank-gold'; icon = '🥇'; }
+                 else if (index === 1) { color = 'bg-rank-silver/20 border-rank-silver'; icon = '🥈'; }
+                 else { color = 'bg-rank-bronze/20 border-rank-bronze'; icon = '🥉'; }
+
+                 return `
+                    <div class="glassmorphism p-4 flex justify-between items-center ${color} border-l-4 rounded-lg shadow-xl mb-3">
+                        <div class="flex items-center">
+                            <span class="text-2xl ml-3">${icon}</span>
+                            <span class="font-bold">${user.username}</span>
+                            <span class="mr-2 text-xs p-1 rounded-full ${user.rank === state.rank ? 'bg-primary-pink' : 'bg-white/10'}">${user.rank}</span>
+                        </div>
+                        <div class="font-extrabold text-lg text-coin-gold flex items-center">
+                             💰 ${user.score.toLocaleString()}
+                        </div>
+                    </div>
+                 `;
+             }).join('');
+             
+             if (top3.length === 0) {
+                 html = '<p class="text-center py-5 text-gray-400">لیدربرد هنوز خالی است. اولین نفر باشید!</p>';
+             }
+             
+             return html;
+        }
+
+        // ************* RIDDLES PAGE *************
+        function renderRiddles() {
+             return `
+                ${renderHeader('معماهای فکری', true)}
+                
+                <p class="text-gray-300 mb-6">هوش و منطق خود را با معماهای ما به چالش بکشید. با حل هر معما امتیاز بگیرید!</p>
+                
+                <div class="space-y-6">
+                    ${CONTENT.riddles.map(riddle => {
+                        const isSolved = state.solvedRiddles[riddle.id];
+                        const attempts = state.riddleChoices[riddle.id] ? Object.keys(state.riddleChoices[riddle.id]).length : 0;
+                        const difficultyColor = riddle.cat === 'آسان' ? 'text-green-400' : riddle.cat === 'متوسط' ? 'text-yellow-400' : 'text-red-400';
+                        
+                        return `
+                            <div id="riddle-${riddle.id}" class="glassmorphism p-5 rounded-xl border-l-4 ${isSolved ? 'border-green-500' : 'border-primary-purple'}">
+                                <h3 class="text-xl font-bold mb-2 flex justify-between items-center">
+                                    <span>${isSolved ? '✅' : '❓'} معمای ${riddle.id}</span>
+                                    <span class="text-sm font-normal ${difficultyColor}">(${riddle.cat})</span>
+                                </h3>
+                                <p class="text-lg mb-4 text-gray-200">${riddle.q}</p>
+                                
+                                <div class="space-y-2">
+                                    ${!isSolved ? shuffleArray([...riddle.options, riddle.a]).map(option => `
+                                        <button onclick="checkRiddle(${riddle.id}, '${option}')" 
+                                                class="riddle-choice w-full p-3 rounded-lg bg-white/10 text-white hover:bg-primary-purple/70 transition">
+                                            ${option}
+                                        </button>
+                                    `).join('') : `
+                                        <p class="text-green-400 font-bold text-center p-3 bg-green-900/50 rounded-lg">
+                                            ✅ حل شد! امتیاز کسب شده: +${riddle.p}
+                                        </p>
+                                        <p class="text-sm text-gray-400 text-center">تعداد تلاش‌ها: ${attempts}</p>
+                                    `}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+        
+        function checkRiddle(id, choice) {
+             const riddle = CONTENT.riddles.find(r => r.id === id);
+             if (!riddle || state.solvedRiddles[id]) return;
+             
+             // ذخیره تلاش
+             if (!state.riddleChoices[id]) state.riddleChoices[id] = {};
+             state.riddleChoices[id][Date.now()] = choice;
+             
+             if (choice === riddle.a) {
+                 state.solvedRiddles[id] = true;
+                 addScore(riddle.p, 'riddlesSolved');
+                 showModal(`🎉 آفرین! معمای ${id} حل شد. +${riddle.p} امتیاز کسب کردید.`, 'success');
+                 route('riddles', false); // رفرش صفحه برای نمایش وضعیت حل شده
+             } else {
+                 showModal('❌ اشتباه بود. دوباره تلاش کنید.', 'error');
+             }
+        }
+        
+        // ************* DAILY CHALLENGE PAGE *************
+        function renderDailyChallenge() {
+            const today = new Date().toDateString();
+            const alreadyPlayed = state.dailyPlayed === today;
+            const hintUsed = state.dailyRiddleHintUsed === today;
+            
+            const hintButton = state.powerups.freeHint > 0 && !hintUsed ? 
+                `<button onclick="useDailyHint()" class="p-3 bg-blue-500/80 hover:bg-blue-600 rounded-lg transition font-bold text-sm">
+                    💡 استفاده از Power-up راهنما (${state.powerups.freeHint} باقی مانده)
+                 </button>` : '';
+
+            return `
+                ${renderHeader('چالش روزانه', true)}
+                
+                <div class="glassmorphism p-6 md:p-8 max-w-2xl mx-auto text-center border-l-4 border-green-500">
+                    <h2 class="text-3xl font-extrabold mb-4 text-green-400">
+                        معمای بزرگ امروز 📅
+                    </h2>
+                    <p class="text-lg mb-6 text-gray-200">
+                        ${CONTENT.dailyRiddle.q}
+                    </p>
+                    <p class="text-sm text-gray-400 mb-6">
+                        امتیاز ویژه: <span class="text-coin-gold font-bold">${CONTENT.dailyRiddle.points}</span> 💰
+                    </p>
+                    
+                    ${!alreadyPlayed ? `
+                        <form id="daily-form" onsubmit="submitDailyRiddle(event)">
+                            <input type="text" id="daily-answer" placeholder="پاسخ خود را اینجا بنویسید (فارسی)" required
+                                class="w-full p-3 rounded-lg bg-white/10 border border-white/30 placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-green-500 text-center" />
+                            
+                            <div class="mt-4 flex flex-col space-y-3">
+                                <button type="submit" class="w-full p-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-[1.02]
+                                  bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 shadow-lg">
+                                    ارسال پاسخ
+                                </button>
+                                ${hintButton}
+                            </div>
+                        </form>
+                        
+                        ${hintUsed ? `
+                            <p class="mt-4 p-3 bg-blue-900/50 rounded-lg text-blue-300 font-bold">
+                                💡 راهنما: ${CONTENT.dailyRiddle.hint}
+                            </p>
+                        ` : ''}
+
+                    ` : `
+                        <p class="text-xl font-bold text-pink-400 p-4 bg-white/10 rounded-lg">
+                            ✅ شما امروز در چالش شرکت کردید. فردا برگردید!
+                        </p>
+                    `}
+                </div>
+            `;
+        }
+        
+        function submitDailyRiddle(e) {
+             e.preventDefault();
+             const answer = document.getElementById('daily-answer').value.trim();
+             const correctAnswer = CONTENT.dailyRiddle.a;
+             
+             if (answer === correctAnswer) {
+                 // به‌روزرسانی استریک
+                 updateStreak(); 
+                 
+                 state.dailyPlayed = new Date().toDateString();
+                 addScore(CONTENT.dailyRiddle.points);
+                 showConfetti();
+                 showModal(`🥳 عالی بود! +${CONTENT.dailyRiddle.points} امتیاز کسب کردید.`, 'success');
+             } else {
+                 showModal('❌ پاسخ اشتباه بود. متأسفانه شانس امروز شما از دست رفت.', 'error');
+                 state.dailyPlayed = new Date().toDateString(); // بازی کرده حساب می‌شود
+                 state.streak = 0; // استریک قطع می‌شود
+             }
+             saveState();
+             route('daily', false);
+        }
+        
+        function useDailyHint() {
+             if (state.powerups.freeHint > 0) {
+                 state.powerups.freeHint -= 1;
+                 state.dailyRiddleHintUsed = new Date().toDateString();
+                 showModal(`💡 راهنمای رایگان استفاده شد. به معمای روزانه برگردید.`, 'info');
+                 saveState();
+                 route('daily', false);
+             } else {
+                 showModal('❌ شما Power-up راهنمای رایگان ندارید.', 'error');
+             }
+        }
+        
+        function updateStreak() {
+             const today = new Date();
+             const yesterday = new Date(today);
+             yesterday.setDate(today.getDate() - 1);
+             
+             const lastPlayedDate = new Date(state.lastPlayedDate).toDateString();
+             
+             if (lastPlayedDate === yesterday.toDateString()) {
+                 state.streak += 1;
+                 showModal(`🔥 استریک شما حفظ شد! استریک فعلی: ${state.streak} روز.`, 'info');
+             } else if (lastPlayedDate !== today.toDateString()) {
+                 state.streak = 1;
+                 showModal('🔥 استریک جدید شما شروع شد! ۱ روز.', 'info');
+             }
+             
+             state.lastPlayedDate = today.toDateString();
+             checkBadgeProgress();
+        }
+
+        // ************* TESTS PAGE (LIST) *************
+        function renderPersonalityTests() {
+             return `
+                ${renderHeader('تست‌های شخصیت و هوش', true)}
+                
+                <p class="text-gray-300 mb-6">با انجام تست‌های مختلف، شخصیت خود را بشناسید و امتیاز بگیرید. هر تست به ۱ بلیط نیاز دارد.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    ${CONTENT.tests.map(test => {
+                        const isAvailable = state.testTickets[test.key] > 0;
+                        const timesCompleted = state.testsCompleted[test.key] || 0;
+                        const actionText = isAvailable ? 'شروع تست' : 'بلیط بخر';
+                        const bgColor = isAvailable ? 'bg-primary-pink/90 hover:bg-primary-pink' : 'bg-gray-700/50 cursor-not-allowed';
+                        
+                        return `
+                            <div class="quiz-card p-5 rounded-xl border-t-4 ${isAvailable ? 'border-pink-400' : 'border-gray-500'} shadow-xl">
+                                <h3 class="text-2xl font-bold mb-2 text-pink-300">${test.title}</h3>
+                                <p class="text-sm text-gray-400 mb-3">تکمیل شده: <span class="font-bold text-white">${timesCompleted}</span> بار</p>
+                                <p class="text-md text-gray-200 mb-4">${test.description}</p>
+                                <p class="text-sm text-coin-gold font-bold mb-4">امتیاز جایزه: +${test.points}</p>
+                                
+                                <button onclick="${isAvailable ? `route('tests/${test.key}-start')` : `route('shop')`}"
+                                        class="w-full p-3 rounded-lg font-bold transition ${bgColor}">
+                                    ${actionText} (${state.testTickets[test.key] || 0} بلیط)
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // ************* TEST START PAGE *************
+        function renderTestStart(test) {
+             if (!test) return render404();
+             
+             // چک کردن بلیط قبل از نمایش صفحه شروع
+             if (state.testTickets[test.key] <= 0) {
+                 showModal('❌ شما بلیط کافی برای این تست ندارید. لطفاً از فروشگاه خرید کنید.', 'error');
+                 return renderPersonalityTests();
+             }
+             
+             let infoText = '';
+             if (test.key === 'mbti') {
+                 infoText = 'این تست ۷ سوالی، خلاصه‌ای از تیپ شخصیتی شما را مشخص می‌کند. صادقانه پاسخ دهید.';
+             } else if (test.key === 'color') {
+                 infoText = 'با انتخاب رنگ‌ها، حالت روحی و شخصیت غالب خود را کشف کنید.';
+             } else if (test.key === 'memory') {
+                  infoText = 'در این تست، ابتدا الگوی نمایش داده شده را به خاطر بسپارید. سپس آن را بازسازی کنید.';
+             }
+
+             return `
+                ${renderHeader(test.title, true)}
+                
+                <div class="glassmorphism p-6 md:p-8 max-w-2xl mx-auto text-center border-l-4 border-pink-400">
+                    <h2 class="text-3xl font-bold mb-4 text-pink-300">آماده‌اید؟</h2>
+                    <p class="text-lg text-gray-200 mb-6">${infoText}</p>
+                    <p class="text-sm text-gray-400 mb-6">
+                        این تست ۱ بلیط از شما کسر می‌کند.
+                        <span class="text-coin-gold font-bold ml-2">جایزه: +${test.points} 💰</span>
+                    </p>
+                    
+                    <button onclick="startQuiz('${test.key}')" 
+                            class="w-full p-4 rounded-lg font-bold text-xl transition-all duration-300 transform hover:scale-[1.03]
+                              bg-gradient-to-r from-primary-purple to-pink-500 shadow-lg">
+                        شروع کنید!
+                    </button>
+                </div>
+            `;
+        }
+        
+        // ************* TEST QUIZ PAGE (MBTI/COLOR) *************
+        let currentQuizData = { testKey: '', answers: {}, currentQuestionIndex: 0 };
+        
+        function renderTestQuiz(test) {
+             if (!test || test.questions.length === 0) return render404();
+             
+             // اگر برای اولین بار وارد کوییز شده
+             if (currentQuizData.testKey !== test.key) {
+                 currentQuizData = { testKey: test.key, answers: {}, currentQuestionIndex: 0 };
+             }
+             
+             const q = test.questions[currentQuizData.currentQuestionIndex];
+             if (!q) { 
+                 // اگر سوالی باقی نمانده بود، نتیجه را نمایش بده
+                 return calculateTestResult(test);
+             }
+
+             return `
+                ${renderHeader(test.title, true)}
+                
+                <div class="glassmorphism p-6 md:p-8 max-w-3xl mx-auto border-l-4 border-pink-400">
+                    <div class="mb-4 flex justify-between items-center">
+                        <p class="text-xl font-bold text-pink-300">سوال ${currentQuizData.currentQuestionIndex + 1} از ${test.questions.length}</p>
+                        <div class="w-1/2 bg-white/10 rounded-full h-2.5">
+                            <div class="bg-pink-500 h-2.5 rounded-full transition-all duration-500" 
+                                 style="width: ${((currentQuizData.currentQuestionIndex + 1) / test.questions.length) * 100}%"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold mb-6 text-gray-100">${q.q}</h2>
+                    
+                    <div class="space-y-4">
+                        ${q.options.map(option => `
+                            <button onclick="submitQuizAnswer('${test.key}', '${option.value}')"
+                                    class="w-full p-4 rounded-lg bg-white/10 text-lg hover:bg-primary-purple/70 transition transform hover:scale-[1.01]">
+                                ${option.text}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function startQuiz(testKey) {
+             // کسر بلیط هنگام شروع
+             if (state.testTickets[testKey] <= 0) {
+                 showModal('❌ شما بلیط کافی برای این تست ندارید.', 'error');
+                 return;
+             }
+             
+             // در مورد تست حافظه، به صفحه بازی ریدایرکت کن (این تست در لیست تست‌ها نباید باشد اما برای حفظ کد قبلی این کار را می‌کنیم)
+             if (testKey === 'memory') {
+                 route('games/memory');
+                 return;
+             }
+             
+             // کسر بلیط (فقط برای تست‌های غیر بازی)
+             state.testTickets[testKey] -= 1; 
+             saveState();
+             
+             // شروع واقعی کوییز
+             currentQuizData = { testKey: testKey, answers: {}, currentQuestionIndex: 0 };
+             route(`tests/${testKey}-quiz`);
+        }
+        
+        function submitQuizAnswer(testKey, answer) {
+             const test = CONTENT.tests.find(c => c.key === testKey);
+             if (!test) return;
+
+             currentQuizData.answers[currentQuizData.currentQuestionIndex] = answer;
+             currentQuizData.currentQuestionIndex++;
+             
+             if (currentQuizData.currentQuestionIndex >= test.questions.length) {
+                 // پایان کوییز
+                 calculateTestResult(test);
+             } else {
+                 // سوال بعدی
+                 route(`tests/${testKey}-quiz`, false); // رفرش صفحه بدون اضافه شدن به تاریخچه
+             }
+        }
+        
+        function calculateTestResult(test) {
+             let resultTitle = '';
+             let resultDesc = '';
+             
+             // **منطق محاسبه MBTI**
+             if (test.key === 'mbti') {
+                 const answers = Object.values(currentQuizData.answers);
+                 const counts = answers.reduce((acc, val) => {
+                    acc[val] = (acc[val] || 0) + 1;
+                    return acc;
+                 }, {});
+
+                 const E_I = (counts['E'] || 0) > (counts['I'] || 0) ? 'E' : 'I';
+                 const S_N = (counts['S'] || 0) > (counts['N'] || 0) ? 'S' : 'N';
+                 const T_F = (counts['T'] || 0) > (counts['F'] || 0) ? 'T' : 'F';
+                 const J_P = (counts['J'] || 0) > (counts['P'] || 0) ? 'J' : 'P';
+
+                 const type = E_I + S_N + T_F + J_P;
+                 
+                 resultTitle = `تیپ شخصیتی شما: ${type}`;
+                 resultDesc = `شما در این تست به عنوان تیپ **${type}** شناسایی شدید. (این یک تست سرگرمی است)`;
+                 
+             // **منطق محاسبه تست رنگ**
+             } else if (test.key === 'color') {
+                 const answers = Object.values(currentQuizData.answers);
+                 const colorCounts = answers.reduce((acc, val) => {
+                    acc[val] = (acc[val] || 0) + 1;
+                    return acc;
+                 }, {});
+
+                 let maxColor = 'None';
+                 let maxCount = 0;
+                 for (const color in colorCounts) {
+                     if (colorCounts[color] > maxCount) {
+                         maxCount = colorCounts[color];
+                         maxColor = color;
+                     }
+                 }
+                 
+                 resultTitle = `رنگ زندگی شما: ${maxColor}`;
+                 resultDesc = `بر اساس انتخاب‌های شما، رنگ ${maxColor} حالت غالب روحی شما را نشان می‌دهد.`;
+             }
+             
+             // **منطق امتیازدهی و رندر نهایی**
+             addScore(test.points, `testsCompleted.${test.key}`, true);
+             
+             appContainer.innerHTML = `
+                ${renderHeader(`نتیجه تست ${test.title}`, true)}
+                
+                <div class="glassmorphism p-6 md:p-10 max-w-3xl mx-auto text-center border-l-4 border-green-500">
+                    <span class="text-6xl block mb-4">🏆</span>
+                    <h2 class="text-4xl font-extrabold mb-4 text-green-400">${resultTitle}</h2>
+                    <p class="text-lg text-gray-200 mb-6">${resultDesc}</p>
+                    <p class="text-2xl font-bold text-coin-gold mb-8">
+                         شما +${test.points} امتیاز کسب کردید! 💰
+                    </p>
+                    
+                    <button onclick="route('tests')" class="mt-4 px-6 py-3 bg-primary-purple rounded-lg hover:bg-primary-pink transition font-bold">
+                        بازگشت به لیست تست‌ها
+                    </button>
+                </div>
+             `;
+             currentQuizData = { testKey: '', answers: {}, currentQuestionIndex: 0 }; // ریست داده‌ها
+        }
+
+
+        // ************* GAMES PAGE (LIST) *************
+        function renderGamesList() {
+             return `
+                ${renderHeader('بازی‌های سرگرمی', true)}
+                
+                <p class="text-gray-300 mb-6">سرعت و مهارت خود را بسنجید! هر بازی می‌تواند به شما امتیاز و جوایز بیشتری بدهد.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    ${CONTENT.games.map(game => {
+                        const timesWon = game.key === 'memory' ? state.memoryGamesWon : state.gamesWon;
+                        const bgColor = game.key === 'clicks' ? 'bg-orange-500/90 hover:bg-orange-600' : 'bg-blue-500/90 hover:bg-blue-600';
+
+                        return `
+                            <div class="quiz-card p-5 rounded-xl border-t-4 border-yellow-400 shadow-xl">
+                                <h3 class="text-2xl font-bold mb-2 text-yellow-300">${game.icon} ${game.title}</h3>
+                                <p class="text-sm text-gray-400 mb-3">بردها: <span class="font-bold text-white">${timesWon}</span></p>
+                                <p class="text-md text-gray-200 mb-4">${game.description}</p>
+                                <p class="text-sm text-coin-gold font-bold mb-4">امتیاز جایزه: +${game.points}</p>
+                                
+                                <button onclick="route('games/${game.key}')"
+                                        class="w-full p-3 rounded-lg font-bold transition ${bgColor}">
+                                    شروع بازی
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // ************* CLICK SPEED GAME PAGE *************
+        let clickGameData = { timer: null, timeLeft: 10, clicks: 0, isActive: false };
+
+        function renderClickSpeedGame() {
+            return `
+                ${renderHeader('بازی سرعت کلیک', true)}
+                
+                <div class="glassmorphism p-6 md:p-8 max-w-xl mx-auto text-center border-l-4 border-orange-400">
+                    <h2 class="text-3xl font-bold mb-4 text-orange-300">چقدر سریع کلیک می‌کنی؟</h2>
+                    <p class="text-lg text-gray-200 mb-6">در ۱۰ ثانیه، تا جایی که می‌توانید روی دایره کلیک کنید.</p>
+                    
+                    <div id="game-status" class="text-2xl font-bold mb-4">
+                        <span id="game-timer">10.0</span> ثانیه باقی مانده
+                    </div>
+                    
+                    <div id="game-result" class="text-xl font-bold text-coin-gold mb-6 hidden"></div>
+                    
+                    <button id="click-area" onclick="handleGameClick()" 
+                            class="w-48 h-48 rounded-full bg-red-600 text-white text-4xl font-extrabold transition transform hover:scale-[1.05] shadow-2xl disabled:opacity-50">
+                        شروع!
+                    </button>
+                    
+                    <p class="text-sm mt-4 text-gray-300">کلیک‌ها: <span id="click-count" class="font-bold">0</span></p>
+
+                    <button id="restart-button" onclick="initClickSpeedGame()" class="hidden mt-4 px-6 py-3 bg-primary-purple rounded-lg hover:bg-primary-pink transition font-bold">
+                        بازی مجدد
+                    </button>
+                </div>
+            `;
+        }
+        
+        function initclicksPage() {
+             initClickSpeedGame();
+        }
+
+        function initClickSpeedGame() {
+            clearInterval(clickGameData.timer);
+            clickGameData = { timer: null, timeLeft: 10, clicks: 0, isActive: false };
+            
+            document.getElementById('game-timer').textContent = '10.0';
+            document.getElementById('click-count').textContent = '0';
+            document.getElementById('game-result').classList.add('hidden');
+            
+            const clickArea = document.getElementById('click-area');
+            clickArea.textContent = 'شروع!';
+            clickArea.disabled = false;
+            clickArea.onclick = startClickGame;
+            clickArea.classList.remove('animate-shake');
+            document.getElementById('restart-button').classList.add('hidden');
+        }
+
+        function startClickGame() {
+            if (clickGameData.isActive) return;
+            clickGameData.isActive = true;
+            document.getElementById('click-area').textContent = 'کلیک!';
+            document.getElementById('click-area').onclick = handleGameClick;
+
+            clickGameData.timer = setInterval(() => {
+                clickGameData.timeLeft -= 0.1;
+                document.getElementById('game-timer').textContent = clickGameData.timeLeft.toFixed(1);
+
+                if (clickGameData.timeLeft <= 0) {
+                    clearInterval(clickGameData.timer);
+                    endClickGame();
+                }
+            }, 100);
+        }
+
+        function handleGameClick() {
+            if (!clickGameData.isActive) return;
+            clickGameData.clicks++;
+            document.getElementById('click-count').textContent = clickGameData.clicks;
+        }
+
+        function endClickGame() {
+            clickGameData.isActive = false;
+            document.getElementById('click-area').disabled = true;
+            document.getElementById('click-area').textContent = 'پایان';
+            document.getElementById('restart-button').classList.remove('hidden');
+
+            const scoreThreshold = 50; 
+            const gamePoints = CONTENT.games.find(g => g.key === 'clicks').points;
+            
+            let resultMessage = `تعداد کلیک: ${clickGameData.clicks}. `;
+
+            if (clickGameData.clicks >= scoreThreshold) {
+                resultMessage += `شما برنده شدید و +${gamePoints} امتیاز گرفتید! 🏆`;
+                addScore(gamePoints, 'gamesWon');
+            } else {
+                resultMessage += `متأسفانه نتوانستید به هدف ${scoreThreshold} کلیک برسید. دوباره تلاش کنید.`;
+            }
+
+            document.getElementById('game-result').textContent = resultMessage;
+            document.getElementById('game-result').classList.remove('hidden');
+        }
+        
+        // ************* MEMORY GAME PAGE *************
+        let memoryGameData = {
+            cards: [],
+            gridSize: 4, 
+            flippedCards: [],
+            matchedPairs: 0,
+            canFlip: true,
+            timer: null,
+            timeElapsed: 0,
+            moves: 0
+        };
+
+        function renderMemoryGame() {
+            return `
+                ${renderHeader('بازی حافظه کارتی', true)}
+                
+                <div class="glassmorphism p-6 md:p-8 max-w-xl mx-auto text-center border-l-4 border-blue-400">
+                    <h2 class="text-3xl font-bold mb-4 text-blue-300">جفت‌ها را پیدا کن!</h2>
+                    <p class="text-lg text-gray-200 mb-4">تمام جفت‌ها را در کمترین زمان و حرکت پیدا کنید.</p>
+                    
+                    <div class="flex justify-between items-center mb-6 text-lg font-bold">
+                        <div>⏱️ زمان: <span id="memory-timer">0</span></div>
+                        <div>🔄 حرکت: <span id="memory-moves">0</span></div>
+                    </div>
+
+                    <div id="memory-grid" class="grid grid-cols-4 gap-2 md:gap-4 p-4 bg-white/10 rounded-lg">
+                        </div>
+                    
+                    <div id="memory-result" class="text-xl font-bold text-green-400 mt-6 hidden"></div>
+
+                    <button id="memory-restart" onclick="initMemoryGame()" class="mt-4 px-6 py-3 bg-primary-purple rounded-lg hover:bg-primary-pink transition font-bold">
+                        شروع مجدد / بازی جدید
+                    </button>
+                </div>
+            `;
+        }
+
+        function initMemoryPage() {
+             initMemoryGame();
+        }
+
+        function initMemoryGame() {
+            clearInterval(memoryGameData.timer);
+            
+            // 8 جفت اموجی
+            const emojis = shuffleArray(['🍎', '🍊', '🍇', '🍉', '🍓', '🍒', '🥝', '🍍', '🍌', '🍋']).slice(0, (memoryGameData.gridSize * memoryGameData.gridSize) / 2);
+            const cardValues = shuffleArray([...emojis, ...emojis]);
+            
+            memoryGameData = {
+                cards: cardValues.map((value, index) => ({ id: index, value: value, isFlipped: false, isMatched: false })),
+                gridSize: 4, 
+                flippedCards: [],
+                matchedPairs: 0,
+                canFlip: true,
+                timer: null,
+                timeElapsed: 0,
+                moves: 0
+            };
+
+            const gridElement = document.getElementById('memory-grid');
+            gridElement.innerHTML = '';
+            gridElement.style.gridTemplateColumns = `repeat(${memoryGameData.gridSize}, 1fr)`;
+            document.getElementById('memory-result').classList.add('hidden');
+            document.getElementById('memory-moves').textContent = '0';
+            document.getElementById('memory-timer').textContent = '0';
+            
+            memoryGameData.cards.forEach(card => {
+                const btn = document.createElement('button');
+                btn.id = `card-${card.id}`;
+                btn.className = 'bg-primary-purple w-full aspect-square text-3xl md:text-5xl rounded-lg font-bold transition duration-300 transform hover:scale-[1.05] shadow-md';
+                btn.textContent = '❓';
+                btn.onclick = () => flipCard(card.id);
+                gridElement.appendChild(btn);
+            });
+            
+            // شروع تایمر
+            memoryGameData.timer = setInterval(() => {
+                memoryGameData.timeElapsed++;
+                document.getElementById('memory-timer').textContent = memoryGameData.timeElapsed;
+            }, 1000);
+        }
+
+        function flipCard(id) {
+            if (!memoryGameData.canFlip) return;
+            const card = memoryGameData.cards.find(c => c.id === id);
+            
+            if (card.isFlipped || card.isMatched) return;
+
+            card.isFlipped = true;
+            memoryGameData.flippedCards.push(card);
+            
+            // به‌روزرسانی UI
+            const btn = document.getElementById(`card-${card.id}`);
+            btn.textContent = card.value;
+            btn.classList.add('bg-white/10', 'text-white');
+            btn.classList.remove('bg-primary-purple');
+            
+            if (memoryGameData.flippedCards.length === 2) {
+                memoryGameData.moves++;
+                document.getElementById('memory-moves').textContent = memoryGameData.moves;
+                memoryGameData.canFlip = false; // قفل برای مقایسه
+
+                const [card1, card2] = memoryGameData.flippedCards;
+                
+                if (card1.value === card2.value) {
+                    // Match Found
+                    card1.isMatched = true;
+                    card2.isMatched = true;
+                    memoryGameData.matchedPairs++;
+                    
+                    document.getElementById(`card-${card1.id}`).classList.add('bg-green-500/50', 'text-green-300');
+                    document.getElementById(`card-${card2.id}`).classList.add('bg-green-500/50', 'text-green-300');
+
+                    memoryGameData.flippedCards = [];
+                    memoryGameData.canFlip = true;
+                    
+                    if (memoryGameData.matchedPairs === (memoryGameData.gridSize * memoryGameData.gridSize) / 2) {
+                        endMemoryGame(true);
+                    }
+                    
+                } else {
+                    // No Match - Flip back after delay
+                    setTimeout(() => {
+                        card1.isFlipped = false;
+                        card2.isFlipped = false;
+                        
+                        document.getElementById(`card-${card1.id}`).textContent = '❓';
+                        document.getElementById(`card-${card1.id}`).classList.add('bg-primary-purple');
+                        document.getElementById(`card-${card1.id}`).classList.remove('bg-white/10', 'text-white');
+
+                        document.getElementById(`card-${card2.id}`).textContent = '❓';
+                        document.getElementById(`card-${card2.id}`).classList.add('bg-primary-purple');
+                        document.getElementById(`card-${card2.id}`).classList.remove('bg-white/10', 'text-white');
+
+                        memoryGameData.flippedCards = [];
+                        memoryGameData.canFlip = true;
+                    }, 800);
+                }
+            }
+        }
+
+        function endMemoryGame(isWin) {
+            clearInterval(memoryGameData.timer);
+            const gamePoints = CONTENT.games.find(g => g.key === 'memory').points;
+
+            if (isWin) {
+                // امتیازدهی بر اساس زمان و حرکت (مثلاً هر 10 ثانیه/10 حرکت کمتر، یک امتیاز بیشتر)
+                let bonus = Math.max(0, 100 - memoryGameData.timeElapsed - memoryGameData.moves);
+                let finalScore = gamePoints + Math.floor(bonus / 20);
+                
+                addScore(finalScore, 'memoryGamesWon');
+                showConfetti();
+                
+                document.getElementById('memory-result').textContent = `تبریک! شما برنده شدید و +${finalScore} امتیاز گرفتید.`;
+                document.getElementById('memory-result').classList.remove('hidden');
+            } else {
+                document.getElementById('memory-result').textContent = `بازی ناتمام ماند. دوباره تلاش کنید.`;
+                document.getElementById('memory-result').classList.remove('hidden');
+            }
+        }
+        
+        // ************* SHOP PAGE *************
+        function renderShop() {
+             return `
+                ${renderHeader('🛒 فروشگاه Power-up و جوایز', true)}
+                
+                <p class="text-gray-300 mb-6">با امتیازات خود، آیتم‌های ویژه مانند بلیط‌های تست، Power-up ها و آواتارها را بخرید.</p>
+
+                <div class="glassmorphism p-5 mb-6 flex justify-around items-center rounded-lg">
+                    <span class="text-xl md:text-2xl font-bold">موجودی شما:</span>
+                    <span class="text-3xl md:text-4xl font-extrabold text-coin-gold">💰 ${state.score.toLocaleString()}</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${CONTENT.shopItems.map(item => {
+                        const canAfford = state.score >= item.cost;
+                        const buttonText = canAfford ? 'خرید' : 'امتیاز کافی نیست';
+                        const bgColor = canAfford ? 'bg-green-500/90 hover:bg-green-600' : 'bg-gray-700/50 cursor-not-allowed';
+
+                        // نمایش تعداد Power-up یا بلیط فعلی
+                        let statusText = '';
+                        if (item.type === 'powerup') {
+                            statusText = `موجودی: ${state.powerups[item.target] || 0}`;
+                        } else if (item.type === 'ticket') {
+                            statusText = `موجودی: ${state.testTickets[item.target] || 0}`;
+                        } else if (item.type === 'rank' && state.rankBoosted) {
+                            statusText = 'بوست فعال است!';
+                        }
+                        
+                        return `
+                            <div class="quiz-card p-5 rounded-xl border-l-4 ${canAfford ? 'border-coin-gold' : 'border-gray-500'} shadow-xl">
+                                <h3 class="text-2xl font-bold mb-2 text-coin-gold">${item.icon} ${item.title}</h3>
+                                <p class="text-md text-gray-200 mb-3">${item.desc}</p>
+                                <p class="text-sm text-gray-400 font-bold mb-4">${statusText}</p>
+                                <p class="text-xl font-bold mb-4 text-pink-300">قیمت: ${item.cost} 💰</p>
+                                
+                                <button onclick="${canAfford ? `buyItem('${item.id}', ${item.cost})` : `showModal('امتیاز شما کافی نیست!', 'error')`}"
+                                        class="w-full p-3 rounded-lg font-bold transition ${bgColor}" ${!canAfford ? 'disabled' : ''}>
+                                    ${buttonText}
+                                </button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+        
+        function buyItem(itemId, cost) {
+             if (!subtractScore(cost)) {
+                 return showModal('❌ امتیاز شما برای خرید این آیتم کافی نیست.', 'error');
+             }
+             
+             const item = CONTENT.shopItems.find(i => i.id === itemId);
+             if (!item) return;
+
+             let message = `✅ آیتم ${item.title} با موفقیت خریداری شد.`;
+
+             switch (item.type) {
+                 case 'ticket':
+                     state.testTickets[item.target] = (state.testTickets[item.target] || 0) + 1;
+                     message += ` (موجودی جدید: ${state.testTickets[item.target]})`;
+                     break;
+                 case 'powerup':
+                     state.powerups[item.target] = (state.powerups[item.target] || 0) + 1;
+                     message += ` (موجودی جدید: ${state.powerups[item.target]})`;
+                     break;
+                 case 'rank':
+                     // فعال‌سازی بوست مقام برای 7 روز
+                     state.rankBoosted = new Date().toDateString();
+                     updateRank();
+                     message = `👑 تبریک! مقام شما به مدت ۷ روز ارتقاء یافت. مقام جدید: ${state.rank}`;
+                     break;
+                 case 'avatar':
+                     state.userAvatar = item.target; // اعمال آواتار جدید
+                     message = `🌟 آواتار شما به ${item.target} تغییر یافت.`;
+                     break;
+             }
+             
+             saveState();
+             showModal(message, 'success');
+             route('shop', false); // رفرش صفحه
+        }
+
+        // ************* PROFILE PAGE *************
+        function renderProfile() {
+            const currentRank = CONTENT.ranks.find(r => r.name === state.rank);
+            const nextRankIndex = CONTENT.ranks.findIndex(r => r.name === state.rank) + (state.rankBoosted ? 2 : 1);
+            const nextRank = CONTENT.ranks[nextRankIndex] || null;
+            const progressPercent = nextRank ? Math.min(100, ((state.score - currentRank.scoreMin) / (nextRank.scoreMin - currentRank.scoreMin)) * 100) : 100;
+            const streakText = state.streak === 0 ? 'هنوز شروع نشده' : `${state.streak} روز متوالی`;
+
+            // محاسبه تعداد کل Power-up ها
+            const totalPowerups = Object.values(state.powerups).reduce((sum, count) => sum + count, 0);
+
+             return `
+                ${renderHeader('پروفایل من', false)}
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-1 glassmorphism p-8 text-center border-l-4 border-primary-purple shadow-2xl">
+                        <div class="text-8xl mb-4">${state.userAvatar}</div>
+                        <h2 class="text-3xl font-bold text-yellow-300 mb-2">${state.user?.username || 'کاربر فان باز'}</h2>
+                        <p class="text-md text-gray-400 mb-4">${state.user?.email || 'بدون ایمیل'}</p>
+                        
+                        <div class="my-4">
+                            <h3 class="text-2xl font-extrabold ${currentRank.color}">${state.rank} - سطح ${state.level}</h3>
+                            <p class="text-lg font-bold text-coin-gold">💰 امتیاز: ${state.score.toLocaleString()}</p>
+                        </div>
+                        
+                        <button onclick="route('edit-profile')" class="mt-4 w-full px-6 py-3 bg-primary-pink rounded-lg hover:bg-primary-purple transition font-bold">
+                            ویرایش پروفایل
+                        </button>
+                         <button onclick="logout()" class="mt-2 w-full px-6 py-3 bg-red-600/80 rounded-lg hover:bg-red-700 transition font-bold">
+                            خروج از حساب
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="glassmorphism p-6 border-l-4 border-rank-gold">
+                            <h3 class="text-2xl font-bold mb-3 text-rank-gold">🚀 پیشرفت مقام</h3>
+                            ${nextRank ? `
+                                <p class="mb-2 text-gray-300">برای رسیدن به مقام **${nextRank.name}** به ${nextRank.scoreMin - state.score} امتیاز دیگر نیاز دارید.</p>
+                                <div class="w-full bg-white/20 rounded-full h-3">
+                                    <div class="bg-rank-gold h-3 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-400 text-left">${progressPercent.toFixed(1)}%</p>
+                            ` : `
+                                <p class="text-green-400 font-bold">شما در بالاترین مقام هستید! (لایت‌باز)</p>
+                            `}
+                            ${state.rankBoosted ? `<p class="mt-3 text-sm text-pink-400 font-bold">👑 بوست مقام فعال است!</p>` : ''}
+                        </div>
+                        
+                        <div class="glassmorphism p-6 border-l-4 border-blue-400">
+                             <h3 class="text-2xl font-bold mb-3 text-blue-400">📊 آمار فعالیت</h3>
+                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                <div class="bg-white/10 p-3 rounded-lg"><span class="block text-2xl font-bold">${state.riddlesSolved}</span> <span class="text-sm text-gray-400">معمای حل شده</span></div>
+                                <div class="bg-white/10 p-3 rounded-lg"><span class="block text-2xl font-bold">${state.totalTestsCompleted}</span> <span class="text-sm text-gray-400">تست کامل شده</span></div>
+                                <div class="bg-white/10 p-3 rounded-lg"><span class="block text-2xl font-bold">${state.gamesWon + state.memoryGamesWon}</span> <span class="text-sm text-gray-400">بازی برده</span></div>
+                                <div class="bg-white/10 p-3 rounded-lg"><span class="block text-2xl font-bold text-green-400">${streakText}</span> <span class="text-sm text-gray-400">استریک</span></div>
+                             </div>
+                        </div>
+
+                        <div class="glassmorphism p-6 border-l-4 border-purple-400 flex justify-between items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold mb-1 text-purple-400">✨ موجودی Power-up</h3>
+                                <p class="text-gray-300">تعداد کل Power-up های شما: ${totalPowerups}</p>
+                            </div>
+                            <button onclick="route('shop')" class="px-6 py-2 bg-purple-500 rounded-lg hover:bg-purple-600 transition font-bold">
+                                مشاهده فروشگاه
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ************* EDIT PROFILE PAGE *************
+        function renderEditProfile() {
+            return `
+                ${renderHeader('ویرایش پروفایل', true)}
+                
+                <div class="glassmorphism p-6 md:p-8 max-w-lg mx-auto border-l-4 border-pink-400">
+                    <form id="edit-profile-form" onsubmit="saveProfileChanges(event)" class="space-y-6">
+                        
+                        <div class="text-center">
+                            <label class="text-xl font-bold block mb-2">انتخاب آواتار</label>
+                            <div class="flex justify-center flex-wrap gap-4">
+                                ${CONTENT.avatars.map(avatar => `
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="avatar" value="${avatar}" ${state.userAvatar === avatar ? 'checked' : ''} class="hidden" onchange="document.getElementById('selected-avatar').textContent = this.value">
+                                        <span class="text-5xl p-2 rounded-full transition-all duration-200 ${state.userAvatar === avatar ? 'bg-primary-pink border-4 border-white' : 'hover:bg-white/10'}">${avatar}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="edit-username" class="text-gray-300 block mb-2">نام مستعار</label>
+                            <input type="text" id="edit-username" value="${state.user?.username || ''}" required 
+                                class="w-full p-3 rounded-lg bg-white/10 border border-white/30 focus:outline-none focus:ring-2 focus:ring-pink-500" />
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <span class="text-8xl" id="selected-avatar">${state.userAvatar}</span>
+                        </div>
+                        
+                        <button type="submit" class="w-full p-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-[1.02]
+                          bg-gradient-to-r from-primary-purple to-pink-500 shadow-lg">
+                          ذخیره تغییرات
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+        
+        function saveProfileChanges(e) {
+             e.preventDefault();
+             const newUsername = document.getElementById('edit-username').value.trim();
+             const newAvatar = document.querySelector('input[name="avatar"]:checked').value;
+
+             if (state.user) {
+                 state.user.username = newUsername;
+             }
+             state.userAvatar = newAvatar;
+
+             showModal('✅ تغییرات پروفایل شما با موفقیت ذخیره شد.', 'success');
+             updateLeaderboard(newUsername, state.score, state.rank);
+             saveState();
+             route('profile', false);
+        }
+        
+        function logout() {
+             state = {
+                user: null, 
+                isAuthenticated: false,
+                score: 0,
+                level: 1,
+                rank: 'مبتدی', 
+                streak: 0,
+                riddlesSolved: 0,
+                testsCompleted: { mbti: 0, color: 0, memory: 0 }, 
+                testTickets: { mbti: 1, color: 1, memory: 1 }, 
+                gamesWon: 0, 
+                memoryGamesWon: 0, 
+                dailyPlayed: new Date('1/1/2000').toDateString(), 
+                lastPlayedDate: new Date('1/1/2000').toDateString(),
+                theme: state.theme, // حفظ تم
+                badges: {}, 
+                solvedRiddles: {}, 
+                riddleChoices: {},
+                userAvatar: '👤',
+                powerups: { doubleScore: 0, freeHint: 0 }, 
+                rankBoosted: null, 
+                leaderboard: state.leaderboard.filter(u => u.username !== state.user?.username), // حذف کاربر از لیدربرد
+                totalTestsCompleted: 0, 
+             };
+             localStorage.removeItem('funbaz_state');
+             historyStack = [];
+             showModal('👋 با موفقیت از حساب کاربری خارج شدید.', 'info');
+             route('login');
+        }
+
+        // ************* LEADERBOARD PAGE *************
+        function renderLeaderboard() {
+            const sortedLeaderboard = [...state.leaderboard].sort((a, b) => b.score - a.score);
+
+            return `
+                ${renderHeader('🏆 جدول رتبه‌بندی جهانی', true)}
+                
+                <p class="text-gray-300 mb-6">برترین بازیکنان از نظر امتیاز کلی را مشاهده کنید.</p>
+                
+                <div class="glassmorphism p-6 md:p-8 border-l-4 border-rank-gold">
+                    <table class="min-w-full text-right divide-y divide-white/20">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-2 md:px-6 text-sm font-bold text-gray-300 tracking-wider">رتبه</th>
+                                <th class="py-3 px-2 md:px-6 text-sm font-bold text-gray-300 tracking-wider">نام مستعار</th>
+                                <th class="py-3 px-2 md:px-6 text-sm font-bold text-gray-300 tracking-wider">مقام</th>
+                                <th class="py-3 px-2 md:px-6 text-sm font-bold text-gray-300 tracking-wider">امتیاز</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10">
+                            ${sortedLeaderboard.map((user, index) => {
+                                let rankIcon = '';
+                                let rankColor = 'text-white';
+                                if (index === 0) { rankIcon = '🥇'; rankColor = 'text-rank-gold'; }
+                                else if (index === 1) { rankIcon = '🥈'; rankColor = 'text-rank-silver'; }
+                                else if (index === 2) { rankIcon = '🥉'; rankColor = 'text-rank-bronze'; }
+                                
+                                const isCurrentUser = state.isAuthenticated && state.user?.username === user.username;
+                                
+                                return `
+                                    <tr class="${isCurrentUser ? 'bg-primary-purple/50 font-bold' : 'hover:bg-white/10 transition'}">
+                                        <td class="py-4 px-2 md:px-6 whitespace-nowrap text-lg ${rankColor}">${rankIcon || (index + 1)}</td>
+                                        <td class="py-4 px-2 md:px-6 whitespace-nowrap">${user.username} ${isCurrentUser ? '(شما)' : ''}</td>
+                                        <td class="py-4 px-2 md:px-6 whitespace-nowrap">${user.rank}</td>
+                                        <td class="py-4 px-2 md:px-6 whitespace-nowrap text-coin-gold font-bold">${user.score.toLocaleString()}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // ************* AWARDS PAGE *************
+        function renderAwards() {
+             return `
+                ${renderHeader('🏅 جوایز و مدال‌های کسب شده', true)}
+                
+                <p class="text-gray-300 mb-6">این مدال‌ها نشان‌دهنده دستاوردهای بزرگ شما در فان باز هستند.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${CONTENT.badges.map(badge => {
+                        const isAchieved = state.badges[badge.id];
+                        let progress = 0;
+                        
+                        // محاسبه پیشرفت
+                        let current = 0;
+                        if (badge.field === 'totalTestsCompleted') { current = state.totalTestsCompleted; }
+                        else if (badge.field === 'memoryGamesWon') { current = state.memoryGamesWon; }
+                        else if (badge.field === 'gamesWon') { current = state.gamesWon; }
+                        else { current = state[badge.field] || 0; }
+
+                        progress = Math.min(100, (current / badge.goal) * 100);
+                        
+                        let badgeColor = '';
+                        if (badge.type === 'طلا') badgeColor = 'border-rank-gold text-rank-gold';
+                        else if (badge.type === 'نقره') badgeColor = 'border-rank-silver text-rank-silver';
+                        else badgeColor = 'border-rank-bronze text-rank-bronze';
+                        
+                        return `
+                            <div class="glassmorphism p-5 rounded-xl border-l-4 ${isAchieved ? badgeColor : 'border-gray-500'} shadow-xl">
+                                <div class="flex items-center mb-3">
+                                    <span class="text-5xl ml-3">${badge.icon}</span>
+                                    <div>
+                                        <h3 class="text-xl font-bold ${isAchieved ? badgeColor : 'text-gray-300'}">${badge.title} ${isAchieved ? '✅' : ''}</h3>
+                                        <p class="text-sm text-gray-400">نوع: ${badge.type}</p>
+                                    </div>
+                                </div>
+                                <p class="text-md text-gray-200 mb-3">${badge.cond}</p>
+                                
+                                <div class="mt-4">
+                                    <p class="text-sm text-gray-400 mb-1">پیشرفت: ${current}/${badge.goal}</p>
+                                    <div class="w-full bg-white/20 rounded-full h-2">
+                                        <div class="h-2 rounded-full transition-all duration-500" 
+                                             style="width: ${progress}%; background-color: ${isAchieved ? (badge.type === 'طلا' ? '#ffd700' : (badge.type === 'نقره' ? '#c0c0c0' : '#cd7f32')) : '#4b5563'};">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // --- 7. AUTHENTICATION & INITIAL SETUP ---
+        
+        function initAuthPage() {
+             // 1. اطمینان از تنظیم حالت اولیه در UI (ورود)
+             toggleAuthMode(false); 
+             
+             // 2. اتصال دکمه تغییر وضعیت
+             const toggleButton = document.getElementById('toggle-mode');
+             if (toggleButton) {
+                 toggleButton.onclick = () => toggleAuthMode(true);
+             }
+             
+             // 3. اتصال فرم اصلی
+             document.getElementById('auth-form').onsubmit = (e) => {
+                 e.preventDefault();
+                 const usernameInput = document.getElementById('username');
+                 const email = document.getElementById('email').value.trim();
+                 const password = document.getElementById('password').value.trim();
+                 // چک کردن نهایی وضعیت: آیا فیلد نام کاربری پنهان است؟ (اگر پنهان نباشد، ثبت نام است)
+                 const isRegistering = !usernameInput.classList.contains('hidden'); 
+                 const authError = document.getElementById('auth-error');
+                 authError.textContent = '';
+                 
+                 // --- شبیه‌سازی فرایند ثبت نام ---
+                 if (isRegistering) {
+                     const username = usernameInput.value.trim();
+                     if (username.length < 3 || password.length < 6) {
+                         authError.textContent = 'نام مستعار حداقل ۳ کاراکتر و رمز عبور حداقل ۶ کاراکتر باشد.';
+                         return;
+                     }
+                     // تنظیم وضعیت کاربر جدید
+                     state.isAuthenticated = true;
+                     state.user = { username, email, id: Date.now().toString() };
+                     state.score = 0; 
+                     state.level = 1;
+                     state.testTickets = { mbti: 1, color: 1, memory: 1 };
+                     state.userAvatar = '👤';
+                     
+                     saveState();
+                     showConfetti();
+                     showModal(`🎉 ثبت نام موفقیت آمیز! خوش آمدید ${username}`, 'success');
+                     
+                     // **تضمین ریدایرکت مستقیم به داشبورد بعد از ثبت نام**
+                     route('dashboard'); 
+                     
+                 // --- شبیه‌سازی فرایند ورود ---
+                 } else {
+                      if (!email || !password) {
+                         authError.textContent = 'ایمیل و رمز عبور الزامی است.';
+                         return;
+                      }
+                      
+                      // شبیه‌سازی ورود موفق و بارگذاری اطلاعات (اگر برای اولین بار است)
+                      state.isAuthenticated = true;
+                      if (!state.user) {
+                           state.user = { username: email.split('@')[0], email, id: '123' };
+                           state.score = 100; 
+                           state.userAvatar = '🤖';
+                      }
+
+                      saveState();
+                      showModal(`👋 ورود موفقیت آمیز. خوش آمدید ${state.user.username}`, 'success');
+                      route('dashboard');
+                 }
+                 
+             };
+        }
+        
+        /**
+         * تغییر وضعیت بین ورود و ثبت نام
+         * @param {boolean} toggleUI - آیا UI باید تغییر کند (برای جلوگیری از تغییر هنگام لود اولیه)
+         */
+        function toggleAuthMode(toggleUI = true) {
+            const usernameInput = document.getElementById('username');
+            const toggleButton = document.getElementById('toggle-mode');
+            const submitButton = document.getElementById('auth-submit-btn');
+            
+            if (!usernameInput || !toggleButton || !submitButton) return;
+
+            // تشخیص حالت فعلی بر اساس visibility نام مستعار
+            const isRegistering = !usernameInput.classList.contains('hidden');
+
+            if (toggleUI) {
+                 if (isRegistering) {
+                    // تبدیل به ورود
+                    usernameInput.classList.add('hidden');
+                    toggleButton.textContent = 'حساب ندارید؟ ثبت نام کنید';
+                    submitButton.textContent = 'ورود';
+                 } else {
+                    // تبدیل به ثبت نام
+                    usernameInput.classList.remove('hidden');
+                    toggleButton.textContent = 'قبلاً حساب داشتم. ورود';
+                    submitButton.textContent = 'ثبت نام';
+                 }
+            } else {
+                 // تنظیم حالت اولیه: ورود (Username پنهان)
+                 usernameInput.classList.add('hidden');
+                 toggleButton.textContent = 'حساب ندارید؟ ثبت نام کنید';
+                 submitButton.textContent = 'ورود';
+            }
+        }
+        
+        // --- 8. GLOBAL INIT & EVENT LISTENERS ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // اعمال تم ذخیره شده
+            if (state.theme === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                document.getElementById('theme-toggle').textContent = '🌙';
+            } else {
+                 document.documentElement.classList.remove('light');
+                 document.documentElement.classList.add('dark');
+                 document.getElementById('theme-toggle').textContent = '☀️';
+            }
+            
+            // تعیین صفحه اولیه بر اساس Hash یا احراز هویت
+            let initialPage = window.location.hash.substring(1) || 'dashboard';
+            if (!state.isAuthenticated && initialPage !== 'login') {
+                initialPage = 'login';
+            }
+            
+            // حل مشکل: اگر مستقیماً به صفحه لاگین رفت و قبلاً احراز شده بود، به داشبورد ریدایرکت کن
+            if (state.isAuthenticated && initialPage === 'login') {
+                 initialPage = 'dashboard';
+            }
+
+            // رندر اولیه
+            route(initialPage, false);
+            initialLoader.style.display = 'none';
+
+            // مانیتور کردن تغییرات Hash (برای دکمه‌های Forward/Backward مرورگر)
+            window.addEventListener('hashchange', (e) => {
+                 const newPage = window.location.hash.substring(1);
+                 // این باعث می‌شود که دکمه‌های مرورگر هم کار کنند، اما ممکن است با `historyStack` تداخل داشته باشد
+                 // برای حل این مشکل، `historyStack` فقط برای دکمه `goBack` داخلی استفاده می‌شود
+                 renderPage(newPage);
+            });
+            
+            // چک کردن استریک روزانه هنگام بارگذاری سایت (اگر احراز شده باشد)
+            if (state.isAuthenticated) {
+                const today = new Date().toDateString();
+                // اگر امروز چالش روزانه را بازی نکرده و دیروز بازی کرده، استریک را چک کن
+                if (state.dailyPlayed !== today) {
+                     // فقط برای حفظ استریک، نیازی به بازی کردن نیست، فقط باید دیروز بازی کرده باشد
+                     updateStreak();
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
